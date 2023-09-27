@@ -103,6 +103,4 @@ const filteredProjects = isAllCategory
 viewFilteredProjects(filteredProjects);
 }
 
-// au clic, appelle la fonction fetchProjects pour récupérer les projets depuis l'API
-
 document.addEventListener("DOMContentLoaded", fetchProjects);
