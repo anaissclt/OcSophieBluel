@@ -25,8 +25,6 @@ async function viewProjects() {
   });
 }
 
-// Afficher les projets dans la galerie 
-
 viewProjects();
 
 
@@ -52,28 +50,28 @@ async function fetchProjects() {
 // fonction qui extrait les catégories des projets
 
 function extractCategories() {
-   const categoryNames = storeData.map(project => project.category?.name).filter(Boolean); // filtrer les valeurs nulles/ non définies
-   const uniqueCategoryNames = new Set(categoryNames); // Stocker ces noms dans un ensemble (Set)
-   const categoriesArray = ['Tous', ...Array.from(uniqueCategoryNames)]; // Convertir en tableau
-   return categoriesArray;
+  const categoryNames = storeData.map(project => project.category?.name).filter(Boolean); // filtrer les valeurs nulles/ non définies
+  const uniqueCategoryNames = new Set(categoryNames); // Stocker ces noms dans un ensemble (Set)
+  const categoriesArray = ['Tous', ...Array.from(uniqueCategoryNames)]; // Convertir en tableau
+  return categoriesArray;
 }
 
 // fonction qui affiche les boutons pour chaque catégorie 
 
 function categoryButtons() {
- const filtersContainer = document.querySelector('.filters');
- const categories = extractCategories(); // Obtenir les catégories à afficher
+  const filtersContainer = document.querySelector('.filters');
+  const categories = extractCategories(); // Obtenir les catégories à afficher
 
- filtersContainer.innerHTML = ''; // Effacer les boutons précédents
+  filtersContainer.innerHTML = ''; // Effacer les boutons précédents
 
-// Créer un bouton pour chaque catégorie
- categories.forEach(category => { 
-   const button = document.createElement('button');
-   button.textContent = category;
+  // Créer un bouton pour chaque catégorie
+  categories.forEach(category => {
+    const button = document.createElement('button');
+    button.textContent = category;
 
-   button.addEventListener('click', () => filterCategoryProjects(category));
-   filtersContainer.appendChild(button);
- });
+    button.addEventListener('click', () => filterCategoryProjects(category));
+    filtersContainer.appendChild(button);
+  });
 }
 
 // fonction qui affiche les projets dans la galerie
@@ -81,7 +79,6 @@ function categoryButtons() {
 function viewFilteredProjects(filteredProjects) {
   const gallery = document.querySelector('.gallery');
   gallery.innerHTML = ''; // efface les éléments précédents 
-
   // Afficher chaque projet dans la galerie
   (filteredProjects || storeData).forEach(project => {
     const projectCard = document.createElement('figure');
@@ -93,14 +90,65 @@ function viewFilteredProjects(filteredProjects) {
 // fonction qui filtre les projets en fonction de la catégorie
 
 function filterCategoryProjects(category) {
-const isAllCategory = category === 'Tous'; // Vérifier si catégorie = "Tous"
+  const isAllCategory = category === 'Tous'; // Vérifier si catégorie = "Tous"
 
-// Filtrer les projets en fonction de la catégorie
-const filteredProjects = isAllCategory
-  ? storeData // Si catégorie = "Tous", afficher tous les projets
-  : storeData.filter(project => project.category?.name === category);
+  // Filtrer les projets en fonction de la catégorie
+  const filteredProjects = isAllCategory
+    ? storeData // Si catégorie = "Tous", afficher tous les projets
+    : storeData.filter(project => project.category?.name === category);
 
-viewFilteredProjects(filteredProjects);
+  viewFilteredProjects(filteredProjects);
 }
 
 document.addEventListener("DOMContentLoaded", fetchProjects);
+
+
+/*** 
+Authentification de l’utilisateur
+***/
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Empêcher le rechargement de la page
+      
+      // Récupérer les valeurs du formulaire
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        //Création de l'objet connexion
+        const connexion = {
+          email: email,
+          password: password
+        }
+
+        // Création de la charge utile au format JSON
+        const chargeUtile = JSON.stringify(connexion)
+
+        // Envoyer les informations de connexion au serveur
+        const response = await fetch('http://localhost:5678/api/users/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: chargeUtile
+        });
+
+        if (!response.ok) {
+          throw new Error('Identifiant ou mot de passe incorrecte. Veuillez réessayer.');
+        }
+
+        const data = await response.json();
+
+        localStorage.setItem('token', data.token); // Stocker le token
+        window.location.href = '../index.html';
+      } catch (error) {
+        console.error(error.message);
+        alert(error.message);
+      }
+    });
+  } else {
+    console.error("L'ID 'loginForm' n'est pas trouvable.");
+  }
+});
