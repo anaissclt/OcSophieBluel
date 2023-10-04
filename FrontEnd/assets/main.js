@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginForm) {
     loginForm.addEventListener('submit', async (event) => {
       event.preventDefault(); // Empêcher le rechargement de la page
-      
+
       // Récupérer les valeurs du formulaire
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Envoyer les informations de connexion au serveur
         const response = await fetch('http://localhost:5678/api/users/login', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: chargeUtile
         });
 
@@ -152,3 +152,57 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error("L'ID 'loginForm' n'est pas trouvable.");
   }
 });
+
+/*** 
+Deconnection de l'utilisateur
+***/
+
+// Fonction pour masquer la classe "filters"
+function hideFilters() {
+  const filters = document.querySelector('.filters');
+  if (filters) {
+    filters.style.display = 'none';
+  }
+}
+
+// Fonction pour afficher la classe "filters"
+function showFilters() {
+  const filters = document.querySelector('.filters');
+  if (filters) {
+    filters.style.display = 'flex';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('loginLogout');
+  const editBanner = document.querySelector('.banner');
+
+  // Vérifier si l'utilisateur est connecté
+  const token = localStorage.getItem('token');
+  if (token) {
+    // Utilisateur connecté, afficher "Logout" et ajouter l'événement de déconnexion
+    logoutBtn.innerText = 'logout';
+    editBanner.style.display = 'block';
+    logoutBtn.addEventListener('click', () => {
+      // Supprimer le token et rediriger vers la page d'accueil
+      localStorage.removeItem('token');
+      editBanner.style.display = 'none';
+      window.location.href = './index.html';
+    });
+       // Si l'utilisateur n'est pas connecté, masquer la classe "filters"
+       hideFilters();
+
+  } else {
+    // Utilisateur non connecté, afficher "Login" et rediriger vers login.html au clic
+    logoutBtn.innerText = 'login';
+    logoutBtn.addEventListener('click', () => {
+      window.location.href = './assets/login.html';
+    });
+    // Si l'utilisateur se déconnecte, réafficher la classe "filters"
+    showFilters();
+  }
+});
+
+/*** 
+Ajout de la fenêtre modale
+***/
