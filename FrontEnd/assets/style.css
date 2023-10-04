@@ -256,3 +256,17 @@ footer nav ul {
   .login__form textarea {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
   }
+
+
+/** Menu edition **/
+
+.banner {
+	background-color: black;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 1140px;
+    position: absolute;
+    top: 0;
+	display: none; /* Caché initialement */
+}
