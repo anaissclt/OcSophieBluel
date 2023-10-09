@@ -9,16 +9,18 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
 		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="./assets/main.js"></script>
 </head>
 
 <body>
+	<!-- Ajout de la bannière modifier  -->
+	<div class="banner">
+		<p>Mode édition <i class="fa-regular fa-pen-to-square"></i></p>
+	</div>
 	<header>
-		<div class="banner">
-			<p>Mode édition</p>
-		</div>
 		<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 		<nav>
 			<ul>
@@ -46,7 +48,29 @@
 			</article>
 		</section>
 		<section id="portfolio">
-			<h2>Mes Projets</h2>
+			<div class="portfolio-title">
+				<h2>Mes Projets</h2>
+				<div class="btn-modifier" onclick="ouvrirModal()"><i class="fa-regular fa-pen-to-square"></i> Modifier</div>
+			</div>
+
+			<div id="modal" class="modal" onclick="fermerModal()">
+				<div class="modal-content" onclick="event.stopPropagation()">
+					<span class="close" onclick="fermerModal()">&times;</span>
+					<h3>Galerie photo</h3>
+					<div class="containerModal">
+						<div class="galleryModal">
+							<!-- Contenu de la modale  -->
+						</div>
+						<div class="formModal"> 
+							<form>
+								<hr>
+								<input type="submit" value="Ajouter une photo">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="filters">
 				<!-- Filtrer les images -->
 			</div>
