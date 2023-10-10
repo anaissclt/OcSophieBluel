@@ -244,17 +244,22 @@ async function viewProjectsModal() {
 
   galleryModal.innerHTML = '';
 
-  projects.forEach(project => {
+  projects.forEach((project) => {
     // Création de la carte de projet
     const projectCard = document.createElement('figure');
     // Ajout de l'image 
     const imgElement = document.createElement('img');
     imgElement.src = project.imageUrl;
     imgElement.alt = project.title;
-    // Ajout de l'encadré noir et de l'icône FontAwesome
+    // Ajout de la poubelle
     const iconContainer = document.createElement('div');
     iconContainer.classList.add('icon-container');
-    iconContainer.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    // iconContainer.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+    iconContainer.innerHTML = `<i class="fa-solid fa-trash" data-project-id="${project.id}"></i>`;
+
+     // Ajout d'un event listener pour la suppression
+     iconContainer.addEventListener('click', supprimerProjet);
 
     // Ajout de l'image et de l'encadré avec l'icône dans la carte du projet
     projectCard.appendChild(imgElement);
@@ -262,16 +267,90 @@ async function viewProjectsModal() {
 
     galleryModal.appendChild(projectCard);
   });
+
 }
 
 // Fonctions pour ouvrir/fermer la modale
 function ouvrirModal() {
   modal.style.display = 'block';
-  viewProjectsModal(); // Afficher les projets dans la galerie de la modal
+  viewProjectsModal(); 
 }
 
 function fermerModal() {
   modal.style.display = 'none';
   const galleryModal = document.querySelector('.galleryModal');
   galleryModal.innerHTML = ''; // Effacer le contenu de la galerie de la modal
+}
+
+/*** 
+Suppression d'un projet
+***/
+
+// Fonction pour mettre à jour la galerie de projets sur la page d'accueil
+async function majAccueil() {
+  const gallery = document.querySelector('.gallery');
+  gallery.innerHTML = ''; // Effacer le contenu actuel
+
+  await viewProjects(); // Actualiser la galerie avec les projets mis à jour
+}
+
+// Fonction pour mettre à jour la galerie de projets dans la modale
+async function majModale() {
+  const galleryModal = document.querySelector('.galleryModal');
+  galleryModal.innerHTML = ''; // Effacer le contenu actuel
+
+  await viewProjectsModal(); // Actualiser la galerie dans la modale avec les projets mis à jour
+}
+
+/*** 
+Suppression d'un projet
+***/
+
+async function supprimerProjet(event) {
+  const projectId = parseInt(event.target.getAttribute('data-project-id'));
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${projectId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.status === 204) {
+      // Mettre à jour la galerie de projets sur la page d'accueil
+      await majAccueil();
+
+      // Mettre à jour la galerie de projets dans la modale
+      await majModale();
+    } else if (response.status === 401) {
+      alert('Vous n\'êtes pas autorisé à supprimer ce projet, merci de vous connecter avec un compte valide');
+      window.location.href = 'login.html';
+    } else {
+      console.error('Erreur lors de la suppression du projet:', response.status);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la suppression du projet:', error);
+  }
+}
+
+
+
+/*** 
+Formulaire
+***/
+
+function afficherModaleFormulaire() {
+  // Masquer la modale actuelle
+  document.getElementById('modal').style.display = 'none';
+  
+  // Afficher la modale du formulaire
+  document.getElementById('modaleFormulaire').style.display = 'block';
+}
+
+function retourVersGalerie() {
+  // Masquer la modale du formulaire
+  document.getElementById('modaleFormulaire').style.display = 'none';
+  
+  // Afficher la modale actuelle
+  document.getElementById('modal').style.display = 'block';
 }
