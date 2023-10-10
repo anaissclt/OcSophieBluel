@@ -482,6 +482,7 @@ a {
 	justify-content: center;
 	width: 20px;
 	height: 20px;
+	cursor: pointer;
 }
 
 .galleryModal .icon-container i {
@@ -497,9 +498,71 @@ hr {
 	border: 1px solid #B3B3B3;
 }
 
-.formModal input {
-	height: 40px;
-	font-size: 1em;
+.formModalAjout, 
+.formModalValide {
+	display: flex;
+    height: 33px;
+    font-size: 1em;
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+    font-family: 'Syne';
+    color: white;
+    background-color: #1D6154;
+    margin: 1em auto;
+    width: 177px;
+    border-radius: 60px;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content-formulaire {
+	background-color: #fefefe;
+	margin: 5% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 630px;
+	/* height: 688px; */
+	text-align: center;
+}
+
+.modal-content-formulaire h3 {
+	text-align: center;
+	font-size: 26px;
+	line-height: normal;
+	margin: inherit;
+}
+
+
+/** Formulaire **/
+
+#projetForm {
+	display: flex;
+    width: 50%;
+    margin: auto;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#projetForm form {
+	text-align: left;
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+#projetForm input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#projetForm label {
+	margin: 2em 0 1em 0;
+}
+
+#projetForm textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
