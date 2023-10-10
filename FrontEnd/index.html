@@ -50,9 +50,11 @@
 		<section id="portfolio">
 			<div class="portfolio-title">
 				<h2>Mes Projets</h2>
-				<div class="btn-modifier" onclick="ouvrirModal()"><i class="fa-regular fa-pen-to-square"></i> Modifier</div>
+				<div class="btn-modifier" onclick="ouvrirModal()"><i class="fa-regular fa-pen-to-square"></i> Modifier
+				</div>
 			</div>
 
+			<!-- Modale pour la gallery -->
 			<div id="modal" class="modal" onclick="fermerModal()">
 				<div class="modal-content" onclick="event.stopPropagation()">
 					<span class="close" onclick="fermerModal()">&times;</span>
@@ -61,10 +63,47 @@
 						<div class="galleryModal">
 							<!-- Contenu de la modale  -->
 						</div>
-						<div class="formModal"> 
+						<div class="formModal">
 							<form>
 								<hr>
-								<input type="submit" value="Ajouter une photo">
+								<!-- Ajouter un projet -->
+								<a href="#modaleFormulaire" class="formModalAjout"
+									onclick="afficherModaleFormulaire()">Ajouter un projet</a>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modale pour le formulaire -->
+			<div id="modaleFormulaire" class="modal" style="display: none;">
+				<div class="modal-content-formulaire" onclick="event.stopPropagation()">
+					<button type="button" onclick="retourVersGalerie()"><i class="fa-solid fa-arrow-left"></i></button>
+					<span class="close" onclick="retourVersGalerie()">&times;</span>
+					<h3>Ajout photo</h3>
+					<div class="containerModal">
+						<div class="formModal">
+
+							<form id="projetForm">
+								<!-- Champ pour uploader une image -->
+								<input type="file" id="imageUpload" accept="image/*" required>
+
+								<!-- Champ pour nommer le projet -->
+								<label for="nomProjet">Titre</label>
+								<input type="text" id="nomProjet" required>
+
+								<!-- Champ select pour choisir une catégorie -->
+								<label for="categorie">Catégorie</label>
+								<select id="categorie" required>
+									<option value="categorie1">Catégorie 1</option>
+									<option value="categorie2">Catégorie 2</option>
+									<option value="categorie3">Catégorie 3</option>
+								</select>
+							</form>
+
+							<form>
+								<hr>
+								<button type="button" class="formModalValide">Valider</button>
 							</form>
 						</div>
 					</div>
