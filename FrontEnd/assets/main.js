@@ -254,8 +254,6 @@ async function viewProjectsModal() {
     // Ajout de la poubelle
     const iconContainer = document.createElement('div');
     iconContainer.classList.add('icon-container');
-    // iconContainer.innerHTML = '<i class="fa-solid fa-trash"></i>';
-
     iconContainer.innerHTML = `<i class="fa-solid fa-trash" data-project-id="${project.id}"></i>`;
 
      // Ajout d'un event listener pour la suppression
@@ -279,32 +277,28 @@ function ouvrirModal() {
 function fermerModal() {
   modal.style.display = 'none';
   const galleryModal = document.querySelector('.galleryModal');
-  galleryModal.innerHTML = ''; // Effacer le contenu de la galerie de la modal
+  galleryModal.innerHTML = ''; 
 }
 
 /*** 
 Suppression d'un projet
 ***/
 
-// Fonction pour mettre à jour la galerie de projets sur la page d'accueil
+// Fonction maj galerie page d'accueil
 async function majAccueil() {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = ''; // Effacer le contenu actuel
+  gallery.innerHTML = ''; 
 
-  await viewProjects(); // Actualiser la galerie avec les projets mis à jour
+  await viewProjects(); // Actualiser la galerie avec la maj projet
 }
 
-// Fonction pour mettre à jour la galerie de projets dans la modale
+// Fonction maj galerie modale
 async function majModale() {
   const galleryModal = document.querySelector('.galleryModal');
-  galleryModal.innerHTML = ''; // Effacer le contenu actuel
+  galleryModal.innerHTML = ''; 
 
-  await viewProjectsModal(); // Actualiser la galerie dans la modale avec les projets mis à jour
+  await viewProjectsModal(); // Actualiser la galerie avec la maj modale
 }
-
-/*** 
-Suppression d'un projet
-***/
 
 async function supprimerProjet(event) {
   const projectId = parseInt(event.target.getAttribute('data-project-id'));
@@ -317,13 +311,13 @@ async function supprimerProjet(event) {
     });
 
     if (response.status === 204) {
-      // Mettre à jour la galerie de projets sur la page d'accueil
+      // maj galerie page d'accueil
       await majAccueil();
 
-      // Mettre à jour la galerie de projets dans la modale
+      // maj galerie modale
       await majModale();
     } else if (response.status === 401) {
-      alert('Vous n\'êtes pas autorisé à supprimer ce projet, merci de vous connecter avec un compte valide');
+      alert('Vous n\'êtes pas autorisé à supprimer ce projet');
       window.location.href = 'login.html';
     } else {
       console.error('Erreur lors de la suppression du projet:', response.status);
