@@ -451,14 +451,14 @@ a {
 
 .galleryModal {
 	display: flex;
-	gap: 10px 10px;
-	flex-wrap: wrap;
-	margin: 1rem;
-	padding: 1rem;
-	align-content: space-around;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: stretch;
+    gap: 10px 20px;
+    flex-wrap: wrap;
+    margin: 2rem;
+    padding: 1rem;
+    align-content: space-around;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 .galleryModal figure {
