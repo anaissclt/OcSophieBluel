@@ -592,7 +592,6 @@ hr {
 	align-items: center;
 	background-color: #E8F1F7;
 	border-radius: 10px;
-	padding-bottom: 20px;
   }
   
   .projetFormPhoto i {
@@ -619,9 +618,14 @@ hr {
   }
   
   .projetFormPhoto p {
-	
+	margin-bottom: 10px;
     font-size: 10px;
   }
+
+img.preview-photo {
+	width: 50%;
+    text-align: center;
+}
 
 
   
