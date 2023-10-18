@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="./assets/main.js"></script>
+	<!-- <script src="./assets/main.js"></script> -->
 </head>
 
 <body>
@@ -86,23 +86,21 @@
 						<div class="formModal">
 							<form id="projetForm">
 								<div class="projetFormPhoto">
-									<i class="fa-regular fa-image"></i>
-									<label for="photo">+ Ajouter une photo</label>
-									<input type="file" name="photo" id="photo" class="js-image" required>
+									<i class="fa-regular fa-image" id="projetFormIcon"></i>
+									<label for="photo" id="projetFormAdd">+ Ajouter une photo</label>
+									<input type="file" id="photo" name="photo" class="photo" accept="image/jpeg, image/png" required>
 									<p>jpg, png : 4mo max</p>
 								</div>
 								<label for="projetFormName">Titre</label>
-								<input type="text" id="projetFormName" required>
+								<input type="text" name="projetFormName" id="projetFormName" required>
 								<label for="projetFormCategorie">Catégorie</label>
-								<select id="projetFormCategorie" required>
-									<option value="categorie1">Catégorie 1</option>
-									<option value="categorie2">Catégorie 2</option>
-									<option value="categorie3">Catégorie 3</option>
+								<select name="projetFormCategorie" id="projetFormCategorie" required>
+								
 								</select>
 							</form>
 							<form>
 								<hr>
-								<input type="submit" class="formModalValide" value="Valider">
+								<input id="formModalValide" type="submit" class="formModalValide" value="Valider">
 							</form>
 						</div>
 					</div>
@@ -138,6 +136,7 @@
 			</ul>
 		</nav>
 	</footer>
+	<script src="./assets/main.js"></script>
 </body>
 
 </html>
