@@ -451,14 +451,14 @@ a {
 
 .galleryModal {
 	display: flex;
-    gap: 10px 20px;
-    flex-wrap: wrap;
-    margin: 2rem;
-    padding: 1rem;
-    align-content: space-around;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: stretch;
+	gap: 10px 20px;
+	flex-wrap: wrap;
+	margin: 2rem;
+	padding: 1rem;
+	align-content: space-around;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
 }
 
 .galleryModal figure {
@@ -498,22 +498,26 @@ hr {
 	border: 1px solid #B3B3B3;
 }
 
-.formModalAjout, 
+.formModal {
+	width: auto;
+	margin: auto;
+}
+
+.formModalAjout,
 .formModalValide {
 	display: flex;
-    height: 33px;
-    font-size: 1em;
+    height: 50px;
+    width: 250px;
+    font-weight: 700;
     border: none;
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
     cursor: pointer;
     font-family: 'Syne';
     color: white;
     background-color: #1D6154;
-    margin: 1em auto;
-    width: 177px;
+	margin: 2em auto;
     border-radius: 60px;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .modal-content-formulaire {
@@ -535,97 +539,131 @@ hr {
 
 .btnReturn {
 	border: none;
-    display: flex;
-    background: none;
-    float: left;
-    font-size: 20px;
-    cursor: pointer;
+	display: flex;
+	background: none;
+	float: left;
+	font-size: 20px;
+	cursor: pointer;
 }
 
 /** Formulaire **/
 
-#projetForm {
-	display: flex;
-	width: 420px;
-    margin: auto;
-    flex-direction: column;
-    align-items: stretch;
-	margin-bottom: 25px;
-}
-
-#projetForm form {
-	text-align: left;
-	margin-top: 30px;
+.modale-projet-form {
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 }
 
-#projetForm input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+.modale-projet-form input[type="submit"]:hover {
+	color: #1D6154;
+	background-color: white;
+	scale: 1.05;
+	cursor: pointer;
 }
 
-#projetForm label {
-	margin: 1em 0;
-    text-align: left;
+.form-group-photo label:hover {
+	background-color: #306685;
+	color: white;
 }
 
-#projetForm textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-#projetFormCategorie {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-
-.projetFormPhoto {
+.form-group-photo {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	background-color: #E8F1F7;
+	width: 100%;
+	height: 200px;
 	border-radius: 10px;
-  }
-  
-  .projetFormPhoto i {
-	color: #CBD6DC;
-    font-size: 60px;
-    margin-top: 20px;
+}
 
-  }
-  
-  .projetFormPhoto input {
+.form-group-photo i {
+	color: #306685;
+	font-size: 90px;
+	font-weight: 100;
+	margin: 20px;
+	margin-top: -25px;
+}
+
+.form-group-photo input {
 	display: none;
-  }
-  
-  .projetFormPhoto label {
-	display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200px;
-    height: 40px;
-    background-color: #CBD6DC;
-    color: #306685;
-    border-radius: 50px;
-    cursor: pointer;
-  }
-  
-  .projetFormPhoto p {
-	margin-bottom: 10px;
-    font-size: 10px;
-  }
+}
 
-img.preview-photo {
-	width: 50%;
-    text-align: center;
+.form-group-photo label {
+	font-family: 'work sans';
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 200px;
+	height: 40px;
+	background-color: #CBD6DC;
+	color: #306685;
+	border-radius: 50px;
+	cursor: pointer;
+	margin-top: -10px;
+}
+
+.form-group-photo::after {
+	content: "jpg, png : 4mo max";
+	margin-top: 10px;
 }
 
 
-  
+.form-group-title {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+}
+
+.form-group-title input {
+	width: 100%;
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+.form-group-title label {
+	margin: 3em 0 1em 0;
+}
+
+
+.form-group-id {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.form-group-id select {
+	width: 100%;
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+.form-group-id label {
+	margin: 3em 0 1em 0;
+}
+
+
+.modale-projet-form input[type="submit"] {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	border: 2px solid #1D6154;
+	height: 50px;
+	width: 250px;
+	text-align: center;
+	border-radius: 60px;
+}
+
+#imagePreview {
+	width: 148px;
+	text-align: center;
+	position: absolute;
+}
