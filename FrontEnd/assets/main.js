@@ -279,6 +279,18 @@ function fermerModal() {
   modal.style.display = 'none';
   const modaleFormulaire = document.getElementById('modaleFormulaire');
   modaleFormulaire.style.display = 'none';
+
+// Réinitialiser le style du label pour "photo"
+const labelPhoto = document.querySelector('label[for="photo"]');
+labelPhoto.style.backgroundColor = '#CBD6DC';
+
+// Réinitialiser l'image d'aperçu
+const imagePreview = document.getElementById('imagePreview');
+imagePreview.style.display = 'none';
+
+// Réinitialiser les champs du formulaire
+const formulaire = document.querySelector('.modale-projet-form');
+formulaire.reset();  
 }
 
 /*** 
@@ -349,265 +361,110 @@ function retourVersGalerie() {
   const modal = document.getElementById('modal');
   // Masquer la modale du formulaire
   modaleFormulaire.style.display = 'none';
+
+  // Réinitialiser le style du label pour "photo"
+  const labelPhoto = document.querySelector('label[for="photo"]');
+  labelPhoto.style.backgroundColor = '#CBD6DC';
+
+   // Masquer l'image d'aperçu
+   const imagePreview = document.getElementById('imagePreview');
+   imagePreview.style.display = 'none';
+
   // Afficher la modale actuelle
   modal.style.display = 'block';
+
+   // Réinitialiser les champs du formulaire
+   const formulaire = document.querySelector('.modale-projet-form');
+   formulaire.reset(); // Cette ligne réinitialisera les champs du formulaire à leur valeur par défaut
 }
 
 
 
-/*** 
-Formulaire, ajout image
-***/
 
-let ImgUser = ''; // Variable pour stocker l'image en base64
+/*** TEST ***/
 
-document.addEventListener('DOMContentLoaded', () => {
-  const indexPage = window.location.pathname.includes('index.html');
+const input = document.querySelector(".image");
+const imagePreview = document.getElementById("imagePreview");
+const labelPhoto = document.querySelector('label[for="photo"]'); // Sélectionnez le label par son attribut "for"
+
+if (window.location.pathname.includes("index.html")) {
+input.addEventListener("change", function (event) {
+  const file = input.files[0];
+  if (file) {
+    // Afficher l'aperçu de l'image
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = "block";
+
+        // Changer le style du label
+        labelPhoto.style.backgroundColor = "transparent";
+    };
+    reader.readAsDataURL(file);
+  } else {
+    // Cacher l'aperçu et supprimer la classe pour le texte blanc
+    imagePreview.style.display = "none";
+    labelPhoto.style.backgroundColor = "#CBD6DC";
+  }
+});
+}
 
 
-  if (indexPage) {
 
 
-    const photoInput = document.getElementById('photo');
-    const photoIcon = document.getElementById('projetFormIcon');
-    const photoLabel = document.getElementById('projetFormAdd');
-    const projetFormPhoto = document.querySelector('.projetFormPhoto');
+const token = localStorage.getItem("token");
+
+const btnAjouterProjet = document.querySelector(".formModalValide");
+if (window.location.pathname.includes("index.html")) {
+  btnAjouterProjet.addEventListener("click", addWork);
+}
+
+// Ajouter un projet
+async function addWork(event) {
+  event.preventDefault();
+
+  const title = document.querySelector(".title").value;
+  const categoryId = document.querySelector(".categoryId").value;
+  const image = document.querySelector(".image").files[0];
 
 
-    function displaySelectedPhoto(event) {
-      const file = event.target.files[0];
+  if (title === "" || categoryId === "" || image === undefined) {
+    alert("Merci de remplir tous les champs");
+    return;
+  } else if (categoryId !== "1" && categoryId !== "2" && categoryId !== "3") {
+    alert("Merci de choisir une catégorie valide");
+    return;
+  } else {
+    try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", categoryId);
+      formData.append("image", image);
 
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-      if (file) {
-        const reader = new FileReader();
+      if (response.status === 201) {
+        recoverProjects();
+        fermerModal();
+        viewProjects();
 
-        // Vérifier le type de fichier et la taille
-        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-          alert('Le fichier doit être au format JPG ou PNG.');
-          return;
-        }
-
-        if (file.size > 4 * 1024 * 1024) {
-          alert('Le fichier est trop grand (4Mo maximum).');
-          return;
-        }
-
-        ImgUser = file.name; // Récupérer le titre du fichier
-        console.log('Image:', ImgUser);
-
-        reader.onload = function (e) {
-          const previewImage = document.createElement('img');
-          previewImage.src = e.target.result;
-          previewImage.setAttribute('class', 'preview-photo');
-
-          // Cacher l'icône et le label
-          photoIcon.classList.add('hidden');
-          photoLabel.classList.add('hidden');
-
-          while (projetFormPhoto.firstChild) {
-            projetFormPhoto.removeChild(projetFormPhoto.firstChild);
-          }
-          projetFormPhoto.appendChild(previewImage);
-        };
-
-        reader.readAsDataURL(file);
+      } else if (response.status === 401) {
+        alert("Vous n'êtes pas autorisé à ajouter un projet");
+        window.location.href = "login.html";
       }
     }
 
-    if (photoInput) {
-      photoInput.addEventListener('change', displaySelectedPhoto);
-    } else {
-      console.error('Élément avec l\'ID "photo" non trouvé.');
+    catch (error) {
+      console.log(error);
     }
   }
-});
-
-
-
-/*** 
-Formulaire, afficher les catégories
-***/
-
-let categoryIdUser = ''; // Variable pour stocker l'ID de la catégorie sélectionnée
-
-const projetFormCategorie = document.getElementById('projetFormCategorie');
-
-if (projetFormCategorie) {
-  projetFormCategorie.addEventListener('change', (event) => {
-    categoryIdUser = event.target.value;
-    console.log('ID de la catégorie sélectionnée:', categoryIdUser);
-  });
-}
-
-async function fetchCategoriesFromAPI() {
-  try {
-    const apiUrl = 'http://localhost:5678/api/categories';
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error('La requête n\'a pas abouti :(');
-    }
-    const data = await response.json();
-    const categoryNames = data.map(category => category.name);
-    return categoryNames;
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories depuis l\'API:', error);
-    return [];
-  }
-}
-
-function extractCategoriesId(data) {
-  const categoriesMap = {};
-
-  data.forEach(project => {
-    const category = project.category;
-    if (category) {
-      const categoryId = category.id.toString(); // Convertir l'ID en chaîne de caractères
-      categoriesMap[categoryId] = category.name; // Stocker dans l'objet avec l'ID comme clé
-    }
-  });
-
-  return categoriesMap;
-}
-
-async function populateCategories() {
-  const projetFormCategorie = document.getElementById('projetFormCategorie');
-  const categoriesMap = await fetchCategoriesFromAPI();
-
-  // Ajouter une option vide
-  const emptyOption = document.createElement('option');
-  emptyOption.value = '';
-  emptyOption.textContent = '';
-  projetFormCategorie.appendChild(emptyOption);
-
-  // Ajouter les catégories sur la liste déroulante
-  for (const categoryId in categoriesMap) {
-    const option = document.createElement('option');
-    option.value = categoryId; // Utiliser l'ID de la catégorie comme valeur
-    option.textContent = `${categoriesMap[categoryId]}`; // Afficher le nom et l'ID
-    option.id = `categoryId-${categoryId}`; // Attribuer un ID unique
-    projetFormCategorie.appendChild(option);
-  }
-}
-
-// Appeler la fonction pour peupler les catégories lors du chargement du DOM
-document.addEventListener('DOMContentLoaded', () => {
-  const indexPage = window.location.pathname.includes('index.html');
-
-  if (indexPage) {
-    populateCategories().catch(err => console.error(err));
-  }
-});
-
-
-
-/*** 
-Formulaire, Récupérer le texte 
-***/
-
-let textUser = ''; // Variable pour stocker le texte de l'utilisateur
-
-const projetFormName = document.getElementById('projetFormName');
-
-if (projetFormName) {
-  projetFormName.addEventListener('input', (event) => {
-    textUser = event.target.value;
-    console.log('Texte saisi par l\'utilisateur:', textUser);
-  });
 }
 
 
 
-/*** 
-Formulaire, envoyer le projet 
-***/
-
-
-const submitFormButton = document.getElementById('formModalValide');
-
-if (submitFormButton) {
-  submitFormButton.addEventListener('click', () => {
-    // Récupérer les valeurs du formulaire
-    const projetFormName = document.getElementById('projetFormName').value;
-
-    // Vérifier si l'utilisateur a sélectionné une catégorie
-    if (!categoryIdUser) {
-      alert('Veuillez sélectionner une catégorie.');
-      return;
-    }
-
-    // Récupérer le fichier image
-    const photoInput = document.querySelector('#photo');
-    const file = photoInput.files[0];
-
-    // Vérifier si l'utilisateur a ajouté une image
-    if (!file) {
-      alert('Veuillez ajouter une image.');
-      return;
-    }
-
-    // Vérifier si le texte a été saisi
-    if (!projetFormName) {
-      alert('Veuillez saisir un titre pour le projet.');
-      return;
-    }
-
-    // Vérifier la taille de l'image (moins de 4 Mo)
-    const imageSizeInMb = file.size / (1024 * 1024); // Convertir en Mo
-    if (imageSizeInMb > 4) {
-      alert('L\'image dépasse la taille maximale autorisée (4 Mo).');
-      return;
-    }
-
-    // Créer un objet FormData pour envoyer les données du projet
-    const formData = new FormData();
-    formData.append('title', textUser);
-    formData.append('category', categoryIdUser);
-    formData.append('image', ImgUser, 'image.jpg');
-
-    // Envoyer les données du projet à l'API
-    envoyerProjetVersAPI(formData);
-  });
-}
-
-
-function extractBase64Image() {
-  const previewImage = document.querySelector('.preview-photo');
-  if (previewImage) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    canvas.width = previewImage.width;
-    canvas.height = previewImage.height;
-    context.drawImage(previewImage, 0, 0);
-
-    // Convertir le contenu du canvas en base64
-    const base64Image = canvas.toDataURL('image/jpeg');
-
-    return base64Image;
-  }
-
-  return null;
-}
-
-async function envoyerProjetVersAPI(formData) {
-  try {
-    const response = await fetch(apiUrl + 'works', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error('Erreur lors de l\'ajout du projet à l\'API. Code d\'erreur : ' + response.status);
-    }
-
-    alert('Projet ajouté avec succès!');
-    // Actualiser la galerie
-    await majAccueil();
-    await majModale();
-  } catch (error) {
-    console.error('Erreur lors de l\'ajout du projet à l\'API:', error);
-    alert('Une erreur s\'est produite lors de l\'ajout du projet.');
-  }
-}
