@@ -338,13 +338,13 @@ async function supprimerProjet(event) {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (response.status === 204) {  // indique que la requête a réussi mais que le client n'a pas besoin de quitter la page actuelle
+    if (response.status === 204) {  // requête a réussi
       // maj galerie page d'accueil
       await majAccueil();
 
       // maj galerie modale
       await majModale();
-    } else if (response.status === 401) { // indique que la requête n'a pas été effectuée, car il manque des informations d'authentification valides pour la ressource visée
+    } else if (response.status === 401) { // requête pas effectuée
       alert('Vous n\'êtes pas autorisé à supprimer ce projet');
       window.location.href = 'login.html';
     } else {
@@ -390,7 +390,7 @@ function retourVersGalerie() {
 
   // Réinitialiser les champs du formulaire
   const formulaire = document.querySelector('.modale-projet-form');
-  formulaire.reset(); // Réinitialisera les champs du formulaire
+  formulaire.reset(); // Réinitialiser les champs du formulaire
 }
 
 
