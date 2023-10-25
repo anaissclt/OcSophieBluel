@@ -2,6 +2,9 @@
 Récupérations des images via javascript
 ***/
 
+
+
+
 // Lien vers l'API
 const apiUrl = 'http://localhost:5678/api/';
 
@@ -37,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 /*** 
 Filtrer les projets par catégories 
 ***/
+
+
 
 // Stocke les données des projets
 let data = [];
@@ -119,6 +124,8 @@ document.addEventListener("DOMContentLoaded", fetchProjects);
 Authentification de l’utilisateur
 ***/
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginPage = window.location.pathname.includes('login.html');
 
@@ -174,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
 /*** 
 Deconnection de l'utilisateur
 ***/
+
+
 
 // Fonction pour masquer la classe "filters"
 function hideFilters() {
@@ -238,6 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
 Ajout de la fenêtre modale
 ***/
 
+
+
 async function viewProjectsModal() {
   const projects = await recoverProjects(); // Fonction qui récupére les projets 
   const galleryModal = document.querySelector('.galleryModal');
@@ -280,22 +291,26 @@ function fermerModal() {
   const modaleFormulaire = document.getElementById('modaleFormulaire');
   modaleFormulaire.style.display = 'none';
 
-// Réinitialiser le style du label pour "photo"
-const labelPhoto = document.querySelector('label[for="photo"]');
-labelPhoto.style.backgroundColor = '#CBD6DC';
+  // Réinitialiser le style du label pour "photo"
+  const labelPhoto = document.querySelector('label[for="photo"]');
+  labelPhoto.style.backgroundColor = '#CBD6DC';
 
-// Réinitialiser l'image d'aperçu
-const imagePreview = document.getElementById('imagePreview');
-imagePreview.style.display = 'none';
+  // Réinitialiser l'image d'aperçu
+  const imagePreview = document.getElementById('imagePreview');
+  imagePreview.style.display = 'none';
 
-// Réinitialiser les champs du formulaire
-const formulaire = document.querySelector('.modale-projet-form');
-formulaire.reset();  
+  // Réinitialiser les champs du formulaire
+  const formulaire = document.querySelector('.modale-projet-form');
+  formulaire.reset();
 }
+
+
 
 /*** 
 Suppression d'un projet
 ***/
+
+
 
 // Fonction maj galerie page d'accueil
 async function majAccueil() {
@@ -366,53 +381,108 @@ function retourVersGalerie() {
   const labelPhoto = document.querySelector('label[for="photo"]');
   labelPhoto.style.backgroundColor = '#CBD6DC';
 
-   // Masquer l'image d'aperçu
-   const imagePreview = document.getElementById('imagePreview');
-   imagePreview.style.display = 'none';
+  // Masquer l'image d'aperçu
+  const imagePreview = document.getElementById('imagePreview');
+  imagePreview.style.display = 'none';
 
   // Afficher la modale actuelle
   modal.style.display = 'block';
 
-   // Réinitialiser les champs du formulaire
-   const formulaire = document.querySelector('.modale-projet-form');
-   formulaire.reset(); // Cette ligne réinitialisera les champs du formulaire à leur valeur par défaut
+  // Réinitialiser les champs du formulaire
+  const formulaire = document.querySelector('.modale-projet-form');
+  formulaire.reset(); // Réinitialisera les champs du formulaire
 }
 
 
 
+/*** 
+Affichage de l'image choisi
+***/
 
-/*** TEST ***/
+
 
 const input = document.querySelector(".image");
 const imagePreview = document.getElementById("imagePreview");
-const labelPhoto = document.querySelector('label[for="photo"]'); // Sélectionnez le label par son attribut "for"
+const labelPhoto = document.querySelector('label[for="photo"]');
 
 if (window.location.pathname.includes("index.html")) {
-input.addEventListener("change", function (event) {
-  const file = input.files[0];
-  if (file) {
-    // Afficher l'aperçu de l'image
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      imagePreview.src = e.target.result;
-      imagePreview.style.display = "block";
+  input.addEventListener("change", function (event) {
+    const file = input.files[0];
+    if (file) {
+      // Afficher l'aperçu de l'image
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = "block";
 
-        // Changer le style du label
         labelPhoto.style.backgroundColor = "transparent";
-    };
-    reader.readAsDataURL(file);
-  } else {
-    // Cacher l'aperçu et supprimer la classe pour le texte blanc
-    imagePreview.style.display = "none";
-    labelPhoto.style.backgroundColor = "#CBD6DC";
-  }
-});
+      };
+      reader.readAsDataURL(file);
+    } else {
+      imagePreview.style.display = "none";
+      labelPhoto.style.backgroundColor = "#CBD6DC";
+    }
+  });
 }
 
+
+
+/*** 
+Récupérer les catégories
+***/
 
 
 
 const token = localStorage.getItem("token");
+
+// MAJ de la catégorie sélectionnée
+const categoriesSelect = document.querySelector(".categoryId");
+if (window.location.pathname.includes("index.html")) {
+  categoriesSelect.addEventListener("change", function () {
+    selectedCategory = categoriesSelect.value;
+  });
+
+  // Charger les catégories à l'initialisation
+  fetchCategories();
+}
+
+let selectedCategory = null;
+
+async function fetchCategories() {
+  const categoriesSelect = document.querySelector(".categoryId");
+
+  try {
+    const response = await fetch("http://localhost:5678/api/categories", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const categories = await response.json();
+      // Parcours des catégories/ ajout à la liste
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        categoriesSelect.appendChild(option);
+      });
+    } else {
+      console.log("Erreur lors de la récupération des catégories");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
+/*** 
+Envoie du projet 
+***/
+
+
 
 const btnAjouterProjet = document.querySelector(".formModalValide");
 if (window.location.pathname.includes("index.html")) {
@@ -427,12 +497,8 @@ async function addWork(event) {
   const categoryId = document.querySelector(".categoryId").value;
   const image = document.querySelector(".image").files[0];
 
-
-  if (title === "" || categoryId === "" || image === undefined) {
+  if (title === "" || selectedCategory === null || image === undefined) {
     alert("Merci de remplir tous les champs");
-    return;
-  } else if (categoryId !== "1" && categoryId !== "2" && categoryId !== "3") {
-    alert("Merci de choisir une catégorie valide");
     return;
   } else {
     try {
@@ -465,6 +531,3 @@ async function addWork(event) {
     }
   }
 }
-
-
-
