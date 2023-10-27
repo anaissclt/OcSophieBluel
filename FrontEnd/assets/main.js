@@ -1,7 +1,6 @@
 /*** 
-Récupérations des images via javascript
+I . Récupérations des images via javascript
 ***/
-
 
 
 
@@ -11,7 +10,7 @@ const apiUrl = 'http://localhost:5678/api/';
 // Fonction qui récupére les projets
 async function recoverProjects() {
   const response = await fetch(apiUrl + 'works');
-  return response.json();
+  return response.json(); //contient les données JSON de l'API
 }
 
 // Fonction qui affiche les projets en HTML
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /*** 
-Filtrer les projets par catégories 
+II. Filtrer les projets par catégories 
 ***/
 
 
@@ -59,7 +58,7 @@ async function fetchProjects() {
 
   data = await response.json();
 
-  // Vérifier si l'élément avec la classe ".gallery" existe
+  // Vérifier l'élément".gallery"
   const gallery = document.querySelector('.gallery');
   if (gallery) {
     viewFilteredProjects();
@@ -121,7 +120,7 @@ document.addEventListener("DOMContentLoaded", fetchProjects);
 
 
 /*** 
-Authentification de l’utilisateur
+III. Authentification de l’utilisateur
 ***/
 
 
@@ -158,10 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           if (!response.ok) {
-            throw new Error('Erreur dans l’identifiant ou le mot de passe.');
+            throw new Error('Erreur dans l’identifiant ou le mot de passe.'); //connexion échoué
           }
 
-          const data = await response.json();
+          const data = await response.json(); // Récupère les données
 
           localStorage.setItem('token', data.token); // Stocker le token
           window.location.href = '../index.html';
@@ -179,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /*** 
-Deconnection de l'utilisateur
+IV.  Deconnection de l'utilisateur
 ***/
 
 
@@ -244,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /*** 
-Ajout de la fenêtre modale
+V. Ajout de la fenêtre modale
 ***/
 
 
@@ -255,7 +254,7 @@ async function viewProjectsModal() {
 
   galleryModal.innerHTML = '';
 
-  projects.forEach((project) => {
+  projects.forEach((project) => { //parcourt chaque projet récupéré
     // Création de la carte de projet
     const projectCard = document.createElement('figure');
     // Ajout de l'image 
@@ -265,11 +264,9 @@ async function viewProjectsModal() {
     // Ajout de la poubelle
     const iconContainer = document.createElement('div');
     iconContainer.classList.add('icon-container');
-    iconContainer.innerHTML = `<i class="fa-solid fa-trash" data-project-id="${project.id}"></i>`;
+    iconContainer.innerHTML = `<i class="fa-solid fa-trash" data-project-id="${project.id}"></i>`; //stocke l'identifiant du projet
 
-    // Ajout d'un event listener pour la suppression
     iconContainer.addEventListener('click', supprimerProjet);
-
     // Ajout de l'image et de l'encadré avec l'icône dans la carte du projet
     projectCard.appendChild(imgElement);
     projectCard.appendChild(iconContainer);
@@ -302,12 +299,24 @@ function fermerModal() {
   // Réinitialiser les champs du formulaire
   const formulaire = document.querySelector('.modale-projet-form');
   formulaire.reset();
+
+  // Réinitialiser la couleur de l'icône
+  const imageIcon = document.querySelector('.form-group-photo i.fa-image');
+  imageIcon.style.color = ""; // Réinitialiser la couleur de l'icône
+
+
+  // Réinitialiser le contenu du pseudo-élément ::after
+  const formGroupPhoto = document.querySelector('.form-group-photo');
+  formGroupPhoto.style.content = "jpg, png : 4mo max"; // Réinitialiser le contenu de ::after
+
+  // Supprimer la classe form-group-photo-selected
+  formGroupPhoto.classList.remove('form-group-photo-selected');
 }
 
 
 
 /*** 
-Suppression d'un projet
+VI. Suppression d'un projet
 ***/
 
 
@@ -329,7 +338,7 @@ async function majModale() {
 }
 
 async function supprimerProjet(event) {
-  const projectId = parseInt(event.target.getAttribute('data-project-id'));
+  const projectId = parseInt(event.target.getAttribute('data-project-id')); // récupère l'identifiant du projet à supprimer
   const token = localStorage.getItem('token');
 
   try {
@@ -338,15 +347,12 @@ async function supprimerProjet(event) {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (response.status === 204) {  // requête a réussi
-      // maj galerie page d'accueil
+    if (response.status === 204) {  // requête réussi
       await majAccueil();
-
-      // maj galerie modale
       await majModale();
-    } else if (response.status === 401) { // requête pas effectuée
+    } else if (response.status === 401) { // requête non effectuée
       alert('Vous n\'êtes pas autorisé à supprimer ce projet');
-      window.location.href = 'login.html';
+      window.location.href = 'login.html'; // redirigé l'user vers la page de connexion
     } else {
       console.error('Erreur lors de la suppression du projet:', response.status);
     }
@@ -358,7 +364,7 @@ async function supprimerProjet(event) {
 
 
 /*** 
-Affichage de la modale formulaire
+VII. Affichage de la modale formulaire
 ***/
 
 
@@ -381,6 +387,17 @@ function retourVersGalerie() {
   const labelPhoto = document.querySelector('label[for="photo"]');
   labelPhoto.style.backgroundColor = '#CBD6DC';
 
+  // Réinitialiser la couleur de l'icône
+  const imageIcon = document.querySelector('.form-group-photo i.fa-image');
+  imageIcon.style.color = ""; // Réinitialiser la couleur de l'icône
+
+  // Réinitialiser le contenu du pseudo-élément ::after
+  const formGroupPhoto = document.querySelector('.form-group-photo');
+  formGroupPhoto.style.content = "jpg, png : 4mo max"; // Réinitialiser le contenu de ::after
+
+  // Supprimer la classe form-group-photo-selected
+  formGroupPhoto.classList.remove('form-group-photo-selected');
+
   // Masquer l'image d'aperçu
   const imagePreview = document.getElementById('imagePreview');
   imagePreview.style.display = 'none';
@@ -396,7 +413,7 @@ function retourVersGalerie() {
 
 
 /*** 
-Affichage de l'image choisi
+VIII. Affichage de l'image choisi
 ***/
 
 
@@ -405,22 +422,38 @@ const input = document.querySelector(".image");
 const imagePreview = document.getElementById("imagePreview");
 const labelPhoto = document.querySelector('label[for="photo"]');
 
+const imageIcon = document.querySelector('.form-group-photo i.fa-image');
+
 if (window.location.pathname.includes("index.html")) {
-  input.addEventListener("change", function (event) {
-    const file = input.files[0];
+  input.addEventListener("change", function (event) { // écouteur d'événements qui surveille les changements
+    const file = input.files[0]; //récupère le fichier image sélectionné par l'utilisateur
+    const formGroupPhoto = document.querySelector('.form-group-photo');
     if (file) {
+
       // Afficher l'aperçu de l'image
-      const reader = new FileReader();
+      const reader = new FileReader(); //permet de lire le contenu du fichier
       reader.onload = function (e) {
         imagePreview.src = e.target.result;
         imagePreview.style.display = "block";
 
         labelPhoto.style.backgroundColor = "transparent";
+
+        // Rendre l'icône transparente
+        imageIcon.style.color = "transparent";
+
+        // Ajoutez la classe pour changer le contenu de ::after
+        formGroupPhoto.classList.add('form-group-photo-selected');
+
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); //démarre la lecture du fichier
     } else {
       imagePreview.style.display = "none";
       labelPhoto.style.backgroundColor = "#CBD6DC";
+
+      // Rétablir la couleur de l'icône
+      imageIcon.style.color = ""; 
+      // Supprimez la classe pour réinitialiser le contenu de ::after
+      formGroupPhoto.classList.remove('form-group-photo-selected');
     }
   });
 }
@@ -428,7 +461,7 @@ if (window.location.pathname.includes("index.html")) {
 
 
 /*** 
-Récupérer les catégories
+IX .Récupérer les catégories
 ***/
 
 
@@ -464,8 +497,8 @@ async function fetchCategories() {
       // Parcours des catégories/ ajout à la liste
       categories.forEach((category) => {
         const option = document.createElement("option");
-        option.value = category.id;
-        option.textContent = category.name;
+        option.value = category.id; // Définit la valeur de l'option sur l'ID de la catégorie.
+        option.textContent = category.name; //Définit le texte de l'option sur le nom de la catégorie.
         categoriesSelect.appendChild(option);
       });
     } else {
@@ -479,7 +512,7 @@ async function fetchCategories() {
 
 
 /*** 
-Envoie du projet 
+X. Envoie du projet 
 ***/
 
 
@@ -492,7 +525,7 @@ if (window.location.pathname.includes("index.html")) {
 // Ajouter un projet
 async function addWork(event) {
   event.preventDefault();
-
+  // extrait des valeurs du formulaire
   const title = document.querySelector(".title").value;
   const categoryId = document.querySelector(".categoryId").value;
   const image = document.querySelector(".image").files[0];
@@ -516,10 +549,8 @@ async function addWork(event) {
       });
 
       if (response.status === 201) {
-        recoverProjects();
         fermerModal();
         viewProjects();
-
       } else if (response.status === 401) {
         alert("Vous n'êtes pas autorisé à ajouter un projet");
         window.location.href = "login.html";
