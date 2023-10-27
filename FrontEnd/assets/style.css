@@ -608,6 +608,9 @@ hr {
 	margin-top: 10px;
 }
 
+.form-group-photo-selected::after {
+	content: "";
+  }
 
 .form-group-title {
 	display: flex;
